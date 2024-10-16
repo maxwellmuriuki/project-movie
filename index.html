@@ -1,40 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Watch</title>
+    <title>Movie App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <div class="logo">Movie Watch</div>
-        <nav>
+        <nav class="navbar">
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Trending</a></li>
-                <li><a href="#">Genres</a></li>
-                <li><a href="#">My List</a></li>
-                <li><a href="#">Login</a></li>
+                <li><a href="#" id="movies-button">Movies</a></li>
+                <li><a href="#" id="tvshows-button">TV Shows</a></li>
+                <li><a href="#" id="home-button">Home</a></li>
             </ul>
         </nav>
+        <h1>Welcome to the Movie App</h1>
     </header>
-    <main>
-        <section class="banner">
-            <h1>Welcome to Movie Watch</h1>
-            <p>Your favorite movies and shows, all in one place.</p>
-        </section>
-        <section class="movie-list">
-            <h2>Trending Movies</h2>
-            <div class="movies" id="movies-container">
-                <!-- Movie items will be inserted here dynamically -->
-            </div>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2024 Movie Watch. All Rights Reserved.</p>
-    </footer>
+
+    <div class="container">
+        <input type="text" id="search-bar" placeholder="Search for movies or TV shows...">
+        <button id="search-button">Search</button>
+        <div id="movie-list"></div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
