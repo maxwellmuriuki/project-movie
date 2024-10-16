@@ -1,0 +1,127 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #1f1f1f;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: bold;
+    color: #ff4081;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: #76ff03;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ff4081;
+}
+
+/* Banner */
+.banner {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #282828, #1f1f1f);
+    color: #ffffff;
+}
+
+.banner h1 {
+    font-size: 50px;
+    color: #00e5ff;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+    margin-bottom: 10px;
+}
+
+.banner p {
+    font-size: 22px;
+    color: #ffeb3b;
+}
+
+/* Movie List */
+.movie-list {
+    padding: 20px;
+}
+
+.movie-list h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #f50057;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.movies .movie {
+    background-color: #1f1f1f;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    color: #ffffff;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.movie-poster {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.movie-title {
+    font-size: 20px;
+    color: #00e5ff;
+    margin-bottom: 5px;
+}
+
+.movie-description {
+    font-size: 14px;
+    color: #bdbdbd;
+}
+
+.movies .movie:hover {
+    transform: scale(1.05);
+    background-color: #333;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1f1f1f;
+    color: #76ff03;
+    font-size: 16px;
+}
