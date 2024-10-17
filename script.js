@@ -1,128 +1,108 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const searchButton = document.getElementById("search-button");
-    const searchBar = document.getElementById("search-bar");
-    const movieList = document.getElementById("movie-list");
-    const TMDB_API_KEY = "977acb2e425b19b5486c00e0fd925bfd";
+// API key and base URL for The Movie Database (TMDb)
+const apiKey = '977acb2e425b19b5486c00e0fd925bfd';
+const baseUrl = 'https://api.themoviedb.org/3';
+const localApiUrl = 'http://localhost:3000/movies'; // Local API URL
+let favorites = []; // Array to hold favorite movies
 
-    // Function to fetch movies from the local db.json
-    const fetchLocalMovies = async () => {
-        try {
-            const response = await fetch("http://localhost:3001/movies");
-            const movies = await response.json();
-            displayMovies(movies);
-        } catch (error) {
-            console.error("Error fetching local movies:", error);
-        }
-    };
+// Fetch popular movies (GET request)
+function fetchMovies() {
+    // Generate a random page number between 1 and 20 for variety
+    const randomPage = Math.floor(Math.random() * 20) + 1;
+    
+    // Sending a GET request to fetch popular movies from a random page
+    fetch(`${baseUrl}/movie/popular?api_key=${apiKey}&page=${randomPage}`)
+        .then(response => response.json()) // Convert the response to JSON
+        .then(data => displayMovies(data.results)) // Pass the movie data to displayMovies function
+        .catch(error => console.error('Error fetching movies:', error)); // Catch any errors
+}
 
-    // Function to search for movies using the TMDb API
-    const searchExternalMovies = async () => {
-        const query = searchBar.value.trim();
-        if (!query) {
-            alert("Please enter a movie title to search.");
-            return;
-        }
+// Fetch movies from local API (GET request)
+function fetchLocalFavorites() {
+    fetch(localApiUrl) // Fetch local favorite movies
+        .then(response => response.json()) // Convert the response to JSON
+        .then(data => {
+            favorites = data; // Store the fetched movies in the favorites array
+            displayFavorites(); // Update the favorites list
+        })
+        .catch(error => console.error('Error fetching local favorites:', error)); // Catch any errors
+}
 
-        try {
-            const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
-            const data = await response.json();
-            displayExternalMovies(data.results);
-        } catch (error) {
-            console.error("Error fetching movies from TMDb:", error);
-        }
-    };
+// Display movies on the page
+function displayMovies(movies) {
+    const moviesList = document.getElementById('movies-list'); // Get the movies list container
+    moviesList.innerHTML = ''; // Clear the current movie list
+    movies.forEach(movie => { // Iterate through each movie
+        const movieCard = document.createElement('div'); // Create a new div for the movie card
+        movieCard.className = 'movie-card'; // Set the class for styling
+        movieCard.setAttribute('data-id', movie.id); // Set a data attribute for easy lookup
+        movieCard.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" alt="${movie.title}"> <!-- Movie poster -->
+            <h3>${movie.title}</h3> <!-- Movie title -->
+            <p>${movie.overview}</p> <!-- Movie description -->
+            <p>Runtime: ${movie.runtime ? movie.runtime + ' minutes' : 'N/A'}</p> <!-- Movie runtime if available -->
+            <button onclick="deleteMovie(${movie.id})">Delete Movie</button> <!-- Delete button -->
+            <button onclick="addToFavorites(${movie.id}, '${movie.title}', '${movie.overview}', '${movie.poster_path}')">Add to Favorites</button> <!-- Pass poster_path to addToFavorites -->
+        `;
+        moviesList.appendChild(movieCard); // Append the movie card to the movies list
+    });
+}
 
-    // Function to display movies from the TMDb API on the page
-    const displayExternalMovies = (movies) => {
-        movieList.innerHTML = ""; // Clear previous movie listings
-        movies.forEach(movie => {
-            const posterPath = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "placeholder.jpg";
-            const movieCard = document.createElement("div");
-            movieCard.classList.add("movie-card");
-            movieCard.innerHTML = `
-                <img src="${posterPath}" alt="${movie.title} Poster" class="movie-poster">
-                <h3 class="movie-title">${movie.title}</h3>
-                <p class="movie-description">${movie.overview || "No description available."}</p>
-                <button class="add-button" data-title="${movie.title}" data-description="${movie.overview}" data-poster="${posterPath}">Add to My List</button>
-            `;
-            movieList.appendChild(movieCard);
-        });
+// Search movies by title (GET request)
+function searchMovies(query) {
+    // Sending a GET request to search for movies based on the query
+    fetch(`${baseUrl}/search/movie?api_key=${apiKey}&query=${query}`)
+        .then(response => response.json()) // Convert the response to JSON
+        .then(data => displayMovies(data.results)) // Pass the search results to displayMovies function
+        .catch(error => console.error('Error searching movies:', error)); // Catch any errors
+}
 
-        // Attach event listeners for add buttons
-        document.querySelectorAll(".add-button").forEach(button => {
-            button.addEventListener("click", (event) => {
-                const title = event.target.getAttribute("data-title");
-                const description = event.target.getAttribute("data-description");
-                const poster = event.target.getAttribute("data-poster");
-                addMovie({ title, description, poster });
-            });
-        });
-    };
+// Delete a movie from the displayed list
+function deleteMovie(movieId) {
+    const movieCard = document.querySelector(`.movie-card[data-id='${movieId}']`); // Find the card by data attribute
+    if (movieCard) {
+        movieCard.remove(); // Remove the movie card from the display
+        alert('Movie deleted'); // Notify the user
+    }
+}
 
-    // Function to display local movies from the db.json
-    const displayMovies = (movies) => {
-        movieList.innerHTML = ""; // Clear previous movie listings
-        movies.forEach(movie => {
-            const movieCard = document.createElement("div");
-            movieCard.classList.add("movie-card");
-            movieCard.innerHTML = `
-                <img src="${movie.poster}" alt="${movie.title} Poster" class="movie-poster">
-                <h3 class="movie-title">${movie.title}</h3>
-                <p class="movie-description">${movie.description}</p>
-                <button class="watch-button" data-id="${movie.id}">Watch Now</button>
-                <button class="delete-button" data-id="${movie.id}">Delete</button>
-            `;
-            movieList.appendChild(movieCard);
-        });
+// Add a movie to favorites
+function addToFavorites(movieId, title, overview, posterPath) {
+    const movie = { id: movieId, title: title, overview: overview, poster_path: posterPath }; // Include poster_path
+    favorites.push(movie); // Add it to the favorites array
+    displayFavorites(); // Update the favorites list
+    alert(`${title} has been added to favorites.`); // Notify the user
+}
 
-        // Attach event listeners for delete buttons
-        document.querySelectorAll(".delete-button").forEach(button => {
-            button.addEventListener("click", (event) => {
-                const id = event.target.getAttribute("data-id");
-                deleteMovie(id);
-            });
-        });
-    };
+// Display favorite movies
+function displayFavorites() {
+    const favoritesList = document.getElementById('favorites-list'); // Get the favorites list container
+    favoritesList.innerHTML = ''; // Clear the current favorites list
+    favorites.forEach(favorite => { // Iterate through each favorite movie
+        const favoriteCard = document.createElement('div'); // Create a new div for the favorite movie card
+        favoriteCard.className = 'movie-card'; // Set the class for styling
+        favoriteCard.setAttribute('data-id', favorite.id); // Set a data attribute for easy lookup
+        favoriteCard.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/w200${favorite.poster_path}" alt="${favorite.title}"> <!-- Favorite movie poster -->
+            <h3>${favorite.title}</h3> <!-- Favorite movie title -->
+            <p>${favorite.overview}</p> <!-- Favorite movie description -->
+            <button onclick="removeFromFavorites(${favorite.id})">Remove from Favorites</button> <!-- Remove from favorites button -->
+        `;
+        favoritesList.appendChild(favoriteCard); // Append the favorite movie card to the favorites list
+    });
+}
 
-    // Function to add a new movie to the local db.json
-    const addMovie = async (movie) => {
-        try {
-            const response = await fetch("http://localhost:3001/movies", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(movie),
-            });
-            if (response.ok) {
-                fetchLocalMovies(); // Refresh the local movie list after adding
-            } else {
-                console.error("Error adding movie:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error adding movie:", error);
-        }
-    };
+// Remove a movie from favorites
+function removeFromFavorites(movieId) {
+    favorites = favorites.filter(favorite => favorite.id !== movieId); // Filter out the movie from favorites
+    displayFavorites(); // Update the favorites list
+}
 
-    // Function to delete a movie from the local db.json
-    const deleteMovie = async (id) => {
-        try {
-            const response = await fetch(`http://localhost:3001/movies/${id}`, {
-                method: "DELETE",
-            });
-            if (response.ok) {
-                fetchLocalMovies(); // Refresh the movie list after deleting
-            } else {
-                console.error("Error deleting movie:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error deleting movie:", error);
-        }
-    };
-
-    // Event listener for the search button to fetch from the external API
-    searchButton.addEventListener("click", searchExternalMovies);
-
-    // Initial fetch to display all movies from the local db.json on page load
-    fetchLocalMovies();
+// Event listeners
+document.getElementById('search-button').addEventListener('click', () => {
+    const query = document.getElementById('search-bar').value; // Get the search query
+    searchMovies(query); // Call the searchMovies function
 });
+
+// Initial fetch to display popular movies and local favorites
+fetchMovies(); // Call the fetchMovies function to display movies on page load
+fetchLocalFavorites(); // Fetch and display local favorite movies on page load

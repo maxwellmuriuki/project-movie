@@ -1,155 +1,217 @@
-/* General styling */
+/* General styles */
 body {
-    font-family: Arial, sans-serif;
-    background: url('https://image.tmdb.org/t/p/original/x2IqsMlpbOhS8zIUJfyl1yO4gHF.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #ffffff;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('22968.jpg') center/cover no-repeat;
+    font-family: 'Arial', sans-serif;
+    color: #f0f0f0;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* Overlay for a darker effect */
+/* Add a background overlay effect */
 body::before {
-    content: "";
-    position: fixed;
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: -1;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.7));
+    z-index: 0;
+    pointer-events: none;
 }
 
-/* Navbar styling */
-.navbar {
-    display: flex;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 15px 0;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 10;
-}
-
-.navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    padding: 0;
-}
-
-.navbar ul li {
-    display: inline;
-}
-
-.navbar ul li a {
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 1.2em;
-    transition: color 0.3s;
-}
-
-.navbar ul li a:hover {
-    color: #ff6347;
-}
-
-/* Header styling */
+/* Header styles */
 header {
+    background: rgba(0, 0, 0, 0.6);
+    color: #f0f0f0;
+    padding: 20px 0;
     text-align: center;
-    padding: 80px 0 20px 0; /* Adjusted for navbar space */
-    animation: fadeIn 1.5s ease-in-out;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+/* Animated gradient neon glow effect */
 header h1 {
-    font-size: 3em;
-    font-weight: bold;
-    background: linear-gradient(90deg, #ff4500, #ff6347);
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: textGlow 1.5s infinite alternate;
+    font-size: 32px;
+    color: #00d4ff;
+    background: linear-gradient(90deg, #ff007b, #00d4ff, #ff007b);
+    background-size: 200% 200%;
+    animation: glow 3s infinite alternate;
+    text-shadow: 0 0 10px #00d4ff, 0 0 20px #ff007b;
 }
 
-/* Search bar styling */
+/* Search bar styles */
 #search-bar {
-    width: 70%;
-    padding: 10px;
-    margin: 20px auto;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    display: block;
+    padding: 12px;
+    width: 250px;
+    border: 2px solid #555;
+    border-radius: 30px;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    position: relative;
+    z-index: 1;
 }
 
+#search-bar::placeholder {
+    color: #ddd;
+}
+
+#search-bar:focus {
+    border-color: #ff007b;
+    background: rgba(255, 255, 255, 0.5);
+    outline: none;
+}
+
+/* Search button styles */
 #search-button {
     padding: 10px 20px;
-    background-color: #ff4500;
-    color: #ffffff;
+    margin-left: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #ff007b, #007BFF);
+    color: #fff;
     cursor: pointer;
-    font-size: 1.1em;
-    transition: background-color 0.3s, transform 0.3s;
-    margin: 0 auto;
-    display: block;
+    transition: background 0.3s, transform 0.3s;
+    box-shadow: 0 6px 20px rgba(255, 0, 122, 0.5);
+    position: relative;
+    z-index: 1;
 }
 
 #search-button:hover {
-    background-color: #ff6347;
+    background: linear-gradient(45deg, #007BFF, #ff007b);
     transform: scale(1.1);
 }
 
-/* Movie list styling */
-#movie-list {
+/* Neon animation */
+@keyframes glow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Movies list styles */
+#movies-list, #favorites-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    padding: 40px;
     justify-content: center;
-    margin-top: 20px;
+    position: relative;
+    z-index: 1;
 }
 
-/* Movie card styling */
+/* Particle effects for cards */
+#movies-list::before, #favorites-list::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('particles.png') repeat;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+/* Movie card styles */
 .movie-card {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+    border-radius: 20px;
     overflow: hidden;
-    width: 220px;
+    width: 250px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     position: relative;
+    z-index: 1;
 }
 
 .movie-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
 }
 
-/* Cool effect for movie poster */
-.movie-poster {
+/* Movie card image */
+.movie-card img {
     width: 100%;
-    height: 330px;
-    object-fit: cover;
-    transition: filter 0.3s;
+    height: auto;
+    border-bottom: 4px solid #ff007b;
 }
 
-.movie-poster:hover {
-    filter: brightness(1.2);
+/* Movie card text */
+.movie-card h3 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #ff007b;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
 }
 
-/* Keyframes for animations */
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+/* Neon text shadow effect */
+.movie-card p {
+    font-size: 14px;
+    padding: 0 15px;
+    color: #ddd;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
-@keyframes textGlow {
-    0% { text-shadow: 0 0 5px #ff6347, 0 0 10px #ff4500, 0 0 20px #ff4500; }
-    100% { text-shadow: 0 0 20px #ff4500, 0 0 30px #ff6347, 0 0 40px #ff6347; }
+/* Movie card button styles */
+.movie-card button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #ff007b, #28a745);
+    color: #fff;
+    cursor: pointer;
+    margin: 10px 5px;
+    transition: background 0.3s, transform 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 0, 122, 0.4);
+}
+
+.movie-card button:hover {
+    background: linear-gradient(45deg, #28a745, #ff007b);
+    transform: scale(1.1);
+}
+
+/* Title styles with neon glow */
+h2 {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 26px;
+    color: #00d4ff;
+    text-shadow: 0 0 10px #00d4ff, 0 0 20px #ff007b;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    #search-bar {
+        width: 70%;
+    }
+    .movie-card {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    header {
+        font-size: 14px;
+    }
+    #search-bar {
+        width: 80%;
+    }
+    #search-button {
+        margin-top: 10px;
+        width: 100%;
+    }
+    .movie-card {
+        width: 100%;
+    }
 }
