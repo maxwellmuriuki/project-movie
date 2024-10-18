@@ -9,7 +9,7 @@ function fetchMovies() {
     // Generate a random page number between 1 and 20 for variety
     const randomPage = Math.floor(Math.random() * 20) + 1;
     
-    // Sending a GET request to fetch popular movies from a random page
+    // Sending a GET request to fetch popular movies from a random page (TMDb)
     fetch(`${baseUrl}/movie/popular?api_key=${apiKey}&page=${randomPage}`)
         .then(response => response.json()) // Convert the response to JSON
         .then(data => displayMovies(data.results)) // Pass the movie data to displayMovies function
@@ -27,9 +27,9 @@ function fetchLocalFavorites() {
         .catch(error => console.error('Error fetching local favorites:', error)); // Catch any errors
 }
 
-// Display movies on the page
+// Display movies on the page (DOM manipulation)
 function displayMovies(movies) {
-    const moviesList = document.getElementById('movies-list'); // Get the movies list container
+    const moviesList = document.getElementById('movies-list'); // Get the movies list container from HTML
     moviesList.innerHTML = ''; // Clear the current movie list
     movies.forEach(movie => { // Iterate through each movie
         const movieCard = document.createElement('div'); // Create a new div for the movie card
@@ -55,7 +55,7 @@ function searchMovies(query) {
         .then(data => displayMovies(data.results)) // Pass the search results to displayMovies function
         .catch(error => console.error('Error searching movies:', error)); // Catch any errors
 }
-
+//delete
 // Delete a movie from the displayed list
 function deleteMovie(movieId) {
     const movieCard = document.querySelector(`.movie-card[data-id='${movieId}']`); // Find the card by data attribute
@@ -64,7 +64,7 @@ function deleteMovie(movieId) {
         alert('Movie deleted'); // Notify the user
     }
 }
-
+// post 
 // Add a movie to favorites
 function addToFavorites(movieId, title, overview, posterPath) {
     const movie = { id: movieId, title: title, overview: overview, poster_path: posterPath }; // Include poster_path
@@ -86,6 +86,7 @@ function displayFavorites() {
             <h3>${favorite.title}</h3> <!-- Favorite movie title -->
             <p>${favorite.overview}</p> <!-- Favorite movie description -->
             <button onclick="removeFromFavorites(${favorite.id})">Remove from Favorites</button> <!-- Remove from favorites button -->
+            <button onclick="updateFavorite(${favorite.id})">Update Movie Details</button> <!-- Update movie button -->
         `;
         favoritesList.appendChild(favoriteCard); // Append the favorite movie card to the favorites list
     });
@@ -95,6 +96,34 @@ function displayFavorites() {
 function removeFromFavorites(movieId) {
     favorites = favorites.filter(favorite => favorite.id !== movieId); // Filter out the movie from favorites
     displayFavorites(); // Update the favorites list
+}
+//putch
+// Update movie details using PATCH request
+function updateFavorite(movieId) {
+    const updatedTitle = prompt("Enter the new title:");
+    const updatedOverview = prompt("Enter the new overview:");
+
+    if (updatedTitle && updatedOverview) {
+        const updatedData = { title: updatedTitle, overview: updatedOverview };
+
+        fetch(`${localApiUrl}/${movieId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        })
+        .then(response => response.json())
+        .then(updatedMovie => {
+            // Update the local favorites list with the new data
+            favorites = favorites.map(fav => fav.id === movieId ? updatedMovie : fav);
+            displayFavorites(); // Refresh the displayed favorites
+            alert('Movie details updated successfully');
+        })
+        .catch(error => console.error('Error updating movie:', error));
+    } else {
+        alert("Both title and overview must be provided to update the movie.");
+    }
 }
 
 // Event listeners

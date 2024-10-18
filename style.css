@@ -17,14 +17,20 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.7));
+    background: radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.8));
     z-index: 0;
     pointer-events: none;
 }
 
+/* Particle background animation */
+@keyframes moveParticles {
+    0% { background-position: 0 0; }
+    100% { background-position: 1000px 1000px; }
+}
+
 /* Header styles */
 header {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7);
     color: #f0f0f0;
     padding: 20px 0;
     text-align: center;
@@ -34,6 +40,13 @@ header {
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect for header */
+header:hover {
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
 }
 
 /* Animated gradient neon glow effect */
@@ -42,36 +55,37 @@ header h1 {
     color: #00d4ff;
     background: linear-gradient(90deg, #ff007b, #00d4ff, #ff007b);
     background-size: 200% 200%;
-    animation: glow 3s infinite alternate;
-    text-shadow: 0 0 10px #00d4ff, 0 0 20px #ff007b;
+    animation: glow 5s infinite alternate;
+    text-shadow: 0 0 15px #00d4ff, 0 0 30px #ff007b, 0 0 45px #00d4ff;
 }
 
 /* Search bar styles */
 #search-bar {
     padding: 12px;
-    width: 250px;
-    border: 2px solid #555;
+    width: 300px;
+    border: 2px solid #888;
     border-radius: 30px;
     transition: all 0.3s;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     position: relative;
     z-index: 1;
 }
 
 #search-bar::placeholder {
-    color: #ddd;
+    color: #bbb;
 }
 
 #search-bar:focus {
     border-color: #ff007b;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.4);
     outline: none;
+    box-shadow: 0 0 10px rgba(255, 0, 122, 0.5);
 }
 
 /* Search button styles */
 #search-button {
-    padding: 10px 20px;
+    padding: 10px 25px;
     margin-left: 10px;
     border: none;
     border-radius: 30px;
@@ -79,14 +93,14 @@ header h1 {
     color: #fff;
     cursor: pointer;
     transition: background 0.3s, transform 0.3s;
-    box-shadow: 0 6px 20px rgba(255, 0, 122, 0.5);
+    box-shadow: 0 8px 25px rgba(255, 0, 122, 0.5);
     position: relative;
     z-index: 1;
 }
 
 #search-button:hover {
     background: linear-gradient(45deg, #007BFF, #ff007b);
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(-5deg);
 }
 
 /* Neon animation */
@@ -100,23 +114,12 @@ header h1 {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    padding: 40px;
+    padding: 50px 40px;
     justify-content: center;
     position: relative;
     z-index: 1;
-}
-
-/* Particle effects for cards */
-#movies-list::before, #favorites-list::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('particles.png') repeat;
-    opacity: 0.2;
-    z-index: -1;
+    background: rgba(0, 0, 0, 0.5);
+    animation: moveParticles 60s linear infinite;
 }
 
 /* Movie card styles */
@@ -124,19 +127,22 @@ header h1 {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     overflow: hidden;
-    width: 250px;
+    width: 270px;
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(20px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     position: relative;
     z-index: 1;
+    cursor: pointer;
+    transform-style: preserve-3d;
 }
 
+/* Adding a 3D rotation effect on hover */
 .movie-card:hover {
-    transform: translateY(-15px) scale(1.05);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    transform: rotateY(20deg) translateY(-20px) scale(1.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
 }
 
 /* Movie card image */
@@ -149,10 +155,11 @@ header h1 {
 /* Movie card text */
 .movie-card h3 {
     font-size: 18px;
-    margin: 10px 0;
+    margin: 15px 0;
     color: #ff007b;
     text-transform: uppercase;
     letter-spacing: 1.2px;
+    text-shadow: 0 0 10px rgba(255, 0, 122, 0.5);
 }
 
 /* Neon text shadow effect */
@@ -160,12 +167,12 @@ header h1 {
     font-size: 14px;
     padding: 0 15px;
     color: #ddd;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
 }
 
 /* Movie card button styles */
 .movie-card button {
-    padding: 12px 25px;
+    padding: 12px 30px;
     border: none;
     border-radius: 30px;
     background: linear-gradient(45deg, #ff007b, #28a745);
@@ -174,29 +181,32 @@ header h1 {
     margin: 10px 5px;
     transition: background 0.3s, transform 0.3s;
     box-shadow: 0 4px 15px rgba(255, 0, 122, 0.4);
+    position: relative;
+    z-index: 1;
 }
 
 .movie-card button:hover {
     background: linear-gradient(45deg, #28a745, #ff007b);
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(3deg);
+    box-shadow: 0 8px 30px rgba(255, 0, 122, 0.6);
 }
 
 /* Title styles with neon glow */
 h2 {
     text-align: center;
     margin-top: 60px;
-    font-size: 26px;
+    font-size: 28px;
     color: #00d4ff;
-    text-shadow: 0 0 10px #00d4ff, 0 0 20px #ff007b;
+    text-shadow: 0 0 15px #00d4ff, 0 0 25px #ff007b, 0 0 35px #00d4ff;
 }
 
 /* Responsive styles */
 @media screen and (max-width: 768px) {
     #search-bar {
-        width: 70%;
+        width: 80%;
     }
     .movie-card {
-        width: 90%;
+        width: 85%;
     }
 }
 
@@ -205,7 +215,7 @@ h2 {
         font-size: 14px;
     }
     #search-bar {
-        width: 80%;
+        width: 90%;
     }
     #search-button {
         margin-top: 10px;
@@ -214,4 +224,9 @@ h2 {
     .movie-card {
         width: 100%;
     }
+}
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
 }
